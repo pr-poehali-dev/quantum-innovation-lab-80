@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
-import { ArrowRight, ChevronRight, Menu, X, Code, Zap, Settings2, Sparkles } from "lucide-react"
+import { ArrowRight, ChevronRight, Menu, X, ShoppingBag, Heart, Star, Filter } from "lucide-react"
 import { motion, type Variants } from "framer-motion"
 import { GridMotion } from "./ui/grid-motion"
 import { cn } from "@/lib/utils"
@@ -125,11 +125,88 @@ const transitionVariants = {
 }
 
 const menuItems = [
-  { name: "Услуги", href: "#services" },
-  { name: "Решения", href: "#solutions" },
+  { name: "Коллекция", href: "#products" },
   { name: "О нас", href: "#about" },
+  { name: "Материалы", href: "#materials" },
   { name: "Контакты", href: "#contact" },
 ]
+
+const products = [
+  {
+    id: 1,
+    name: "Сумка-тоут из натуральной кожи",
+    description: "Просторная и элегантная сумка, сшитая вручную из итальянской кожи. Идеальна для работы и прогулок.",
+    price: "8 900 ₽",
+    category: "Тоут",
+    image: "https://picsum.photos/seed/bag1/400/320",
+    badge: "Хит продаж",
+  },
+  {
+    id: 2,
+    name: "Вязаная сумка-мешок",
+    description: "Лёгкая летняя сумка из хлопковой нити ручной вязки. Вместительная и стильная для любого образа.",
+    price: "3 200 ₽",
+    category: "Мешок",
+    image: "https://picsum.photos/seed/bag2/400/320",
+    badge: "Новинка",
+  },
+  {
+    id: 3,
+    name: "Кожаный кроссбоди",
+    description: "Компактная сумка через плечо из натуральной замши. Регулируемый ремень, надёжная фурнитура.",
+    price: "6 400 ₽",
+    category: "Кроссбоди",
+    image: "https://picsum.photos/seed/bag3/400/320",
+    badge: "Ручная работа",
+  },
+  {
+    id: 4,
+    name: "Плетёная корзина-шопер",
+    description: "Экологичная сумка из натурального ротанга. Плетение выполнено вручную местными мастерами.",
+    price: "4 100 ₽",
+    category: "Шопер",
+    image: "https://picsum.photos/seed/bag4/400/320",
+    badge: "Эко",
+  },
+  {
+    id: 5,
+    name: "Клатч из тиснёной кожи",
+    description: "Изысканный вечерний клатч с тиснением под крокодила. Магнитная застёжка, внутренний карман.",
+    price: "5 700 ₽",
+    category: "Клатч",
+    image: "https://picsum.photos/seed/bag5/400/320",
+    badge: "Ручная работа",
+  },
+  {
+    id: 6,
+    name: "Рюкзак из мягкой кожи",
+    description: "Стильный городской рюкзак ручной работы. Натуральная телячья кожа, хлопковая подкладка.",
+    price: "12 500 ₽",
+    category: "Рюкзак",
+    image: "https://picsum.photos/seed/bag6/400/320",
+    badge: "Премиум",
+  },
+  {
+    id: 7,
+    name: "Льняная пляжная сумка",
+    description: "Большая летняя сумка из натурального льна с деревянными ручками. Помещает всё необходимое.",
+    price: "2 800 ₽",
+    category: "Пляжная",
+    image: "https://picsum.photos/seed/bag7/400/320",
+    badge: "Лето 2026",
+  },
+  {
+    id: 8,
+    name: "Поясная сумка из нубука",
+    description: "Удобная поясная сумка из нежного нубука. Компактная, но вмещает телефон, карты и ключи.",
+    price: "3 900 ₽",
+    category: "Поясная",
+    image: "https://picsum.photos/seed/bag8/400/320",
+    badge: "Тренд",
+  },
+]
+
+const categories = ["Все", "Тоут", "Кроссбоди", "Рюкзак", "Клатч", "Шопер", "Мешок", "Пляжная", "Поясная"]
 
 const HeroHeader = () => {
   const [menuState, setMenuState] = React.useState(false)
@@ -137,10 +214,7 @@ const HeroHeader = () => {
 
   React.useEffect(() => {
     if (typeof window === "undefined") return
-
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
+    const handleScroll = () => setIsScrolled(window.scrollY > 50)
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
@@ -159,10 +233,9 @@ const HeroHeader = () => {
               <a href="/" aria-label="home" className="flex items-center space-x-2">
                 <Logo />
               </a>
-
               <button
                 onClick={() => setMenuState(!menuState)}
-                aria-label={menuState == true ? "Закрыть меню" : "Открыть меню"}
+                aria-label={menuState ? "Закрыть меню" : "Открыть меню"}
                 className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden"
               >
                 <Menu className="in-data-[state=active]:rotate-180 group-data-[state=active]:scale-0 group-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
@@ -174,10 +247,7 @@ const HeroHeader = () => {
               <ul className="flex gap-8 text-sm">
                 {menuItems.map((item, index) => (
                   <li key={index}>
-                    <a
-                      href={item.href}
-                      className="text-muted-foreground hover:text-accent-foreground block duration-150"
-                    >
+                    <a href={item.href} className="text-muted-foreground hover:text-accent-foreground block duration-150">
                       <span>{item.name}</span>
                     </a>
                   </li>
@@ -190,10 +260,7 @@ const HeroHeader = () => {
                 <ul className="space-y-6 text-base">
                   {menuItems.map((item, index) => (
                     <li key={index}>
-                      <a
-                        href={item.href}
-                        className="text-muted-foreground hover:text-accent-foreground block duration-150"
-                      >
+                      <a href={item.href} className="text-muted-foreground hover:text-accent-foreground block duration-150">
                         <span>{item.name}</span>
                       </a>
                     </li>
@@ -202,17 +269,18 @@ const HeroHeader = () => {
               </div>
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
                 <Button variant="outline" size="sm" className={cn(isScrolled && "lg:hidden")}>
-                  <span>Войти</span>
+                  <span>Избранное</span>
                 </Button>
                 <Button
                   size="sm"
                   className={cn(
                     isScrolled
-                      ? "lg:inline-flex bg-orange-500 hover:bg-orange-600"
-                      : "hidden bg-orange-500 hover:bg-orange-600",
+                      ? "lg:inline-flex bg-[#8B4513] hover:bg-[#6B3410]"
+                      : "hidden bg-[#8B4513] hover:bg-[#6B3410]",
                   )}
                 >
-                  <span>Начать</span>
+                  <ShoppingBag className="mr-2 h-4 w-4" />
+                  <span>Корзина</span>
                 </Button>
               </div>
             </div>
@@ -226,55 +294,109 @@ const HeroHeader = () => {
 const Logo = ({ className }: { className?: string }) => {
   return (
     <div className={cn("flex items-center space-x-2", className)}>
-      <div className="bg-orange-500 rounded-lg p-2">
-        <Code className="h-6 w-6 text-white" />
+      <div className="bg-[#8B4513] rounded-lg p-2">
+        <ShoppingBag className="h-6 w-6 text-white" />
       </div>
-      <span className="text-xl font-bold">КодМастер</span>
+      <span className="text-xl font-bold">Сумки ручной работы</span>
     </div>
   )
 }
 
-const CardDecorator = ({ children }: { children: React.ReactNode }) => (
-  <div
-    aria-hidden
-    className="relative mx-auto size-36 [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"
-  >
-    <div className="absolute inset-0 [--border:black] dark:[--border:white] bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:24px_24px] opacity-10" />
-    <div className="bg-background absolute inset-0 m-auto flex size-12 items-center justify-center border-t border-l border-orange-200">
-      {children}
-    </div>
-  </div>
-)
+const ProductCard = ({ product }: { product: typeof products[0] }) => {
+  const [liked, setLiked] = React.useState(false)
+
+  return (
+    <motion.div
+      whileHover={{ y: -6, transition: { duration: 0.2 } }}
+      className="group bg-white dark:bg-card rounded-2xl overflow-hidden border border-stone-200 dark:border-stone-700 shadow-sm hover:shadow-xl transition-shadow duration-300"
+    >
+      <div className="relative overflow-hidden aspect-[4/3]">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+        <div className="absolute top-3 left-3">
+          <span className="bg-[#8B4513] text-white text-xs font-medium px-2.5 py-1 rounded-full">
+            {product.badge}
+          </span>
+        </div>
+        <button
+          onClick={() => setLiked(!liked)}
+          className="absolute top-3 right-3 bg-white/90 dark:bg-background/90 p-2 rounded-full shadow-md hover:scale-110 transition-transform"
+        >
+          <Heart
+            className={cn("h-4 w-4 transition-colors", liked ? "fill-red-500 text-red-500" : "text-stone-400")}
+          />
+        </button>
+        <div className="absolute bottom-3 left-3">
+          <span className="bg-stone-100/90 dark:bg-stone-800/90 text-stone-600 dark:text-stone-300 text-xs px-2.5 py-1 rounded-full">
+            {product.category}
+          </span>
+        </div>
+      </div>
+
+      <div className="p-5">
+        <h3 className="font-semibold text-foreground text-base leading-tight mb-2">{product.name}</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-4 line-clamp-2">{product.description}</p>
+
+        <div className="flex items-center mb-4">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <Star key={star} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+          ))}
+          <span className="text-xs text-muted-foreground ml-1.5">(12)</span>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <span className="text-xl font-bold text-[#8B4513]">{product.price}</span>
+          <Button
+            size="sm"
+            className="bg-[#8B4513] hover:bg-[#6B3410] text-white rounded-xl px-4"
+          >
+            <ShoppingBag className="mr-1.5 h-3.5 w-3.5" />
+            В корзину
+          </Button>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+const gridItems = [
+  "https://picsum.photos/seed/leather1/400/300",
+  "https://picsum.photos/seed/bag_craft/400/300",
+  "https://picsum.photos/seed/handbag1/400/300",
+  "https://picsum.photos/seed/purse1/400/300",
+  "https://picsum.photos/seed/tote1/400/300",
+  "https://picsum.photos/seed/clutch1/400/300",
+  "https://picsum.photos/seed/leather2/400/300",
+  "https://picsum.photos/seed/bag_stitch/400/300",
+  "https://picsum.photos/seed/handmade1/400/300",
+  "https://picsum.photos/seed/woven1/400/300",
+  "https://picsum.photos/seed/leather3/400/300",
+  "https://picsum.photos/seed/purse2/400/300",
+  "https://picsum.photos/seed/handbag2/400/300",
+  "https://picsum.photos/seed/tote2/400/300",
+  "https://picsum.photos/seed/backpack1/400/300",
+  "https://picsum.photos/seed/clutch2/400/300",
+  "https://picsum.photos/seed/bag_handcraft/400/300",
+  "https://picsum.photos/seed/leather4/400/300",
+  "https://picsum.photos/seed/woven2/400/300",
+  "https://picsum.photos/seed/purse3/400/300",
+  "https://picsum.photos/seed/handbag3/400/300",
+  "https://picsum.photos/seed/tote3/400/300",
+  "https://picsum.photos/seed/crossbody1/400/300",
+  "https://picsum.photos/seed/leather5/400/300",
+  "https://picsum.photos/seed/bag_artisan/400/300",
+  "https://picsum.photos/seed/purse4/400/300",
+]
 
 export default function SoftwareDevelopmentWebsite() {
-  const gridItems = [
-    "https://cdn.poehali.dev/templates/landing-page/fluid-gradient.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/vr-experience.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/ai-whiteboard.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/human-ai.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/digital-eye.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/robot.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/purple-flow.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/data-beam.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/ai-keyboard.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/fiber-optic.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/fluid-gradient.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/vr-experience.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/ai-whiteboard.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/human-ai.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/digital-eye.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/robot.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/purple-flow.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/data-beam.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/ai-keyboard.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/fiber-optic.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/fluid-gradient.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/vr-experience.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/ai-whiteboard.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/human-ai.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/digital-eye.jpg",
-    "https://cdn.poehali.dev/templates/landing-page/robot.jpg",
-  ]
+  const [activeCategory, setActiveCategory] = React.useState("Все")
+
+  const filteredProducts = activeCategory === "Все"
+    ? products
+    : products.filter((p) => p.category === activeCategory)
 
   return (
     <>
@@ -284,10 +406,11 @@ export default function SoftwareDevelopmentWebsite() {
           aria-hidden
           className="z-[2] absolute inset-0 pointer-events-none isolate opacity-50 contain-strict hidden lg:block"
         >
-          <div className="w-[35rem] h-[80rem] -translate-y-[350px] absolute left-0 top-0 -rotate-45 rounded-full bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,hsla(25,100%,50%,.08)_0,hsla(25,100%,45%,.02)_50%,hsla(25,100%,40%,0)_80%)]" />
-          <div className="h-[80rem] absolute left-0 top-0 w-56 -rotate-45 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,hsla(25,100%,50%,.06)_0,hsla(25,100%,45%,.02)_80%,transparent_100%)] [translate:5%_-50%]" />
+          <div className="w-[35rem] h-[80rem] -translate-y-[350px] absolute left-0 top-0 -rotate-45 rounded-full bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,hsla(20,60%,40%,.08)_0,hsla(20,60%,35%,.02)_50%,hsla(20,60%,30%,0)_80%)]" />
+          <div className="h-[80rem] absolute left-0 top-0 w-56 -rotate-45 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,hsla(20,60%,40%,.06)_0,hsla(20,60%,35%,.02)_80%,transparent_100%)] [translate:5%_-50%]" />
         </div>
 
+        {/* Hero */}
         <section>
           <div className="relative pt-24 md:pt-36">
             <div
@@ -298,33 +421,28 @@ export default function SoftwareDevelopmentWebsite() {
               <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
                 <AnimatedGroup variants={transitionVariants}>
                   <a
-                    href="#services"
+                    href="#products"
                     className="hover:bg-background dark:hover:border-t-border bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-black/5 transition-all duration-300 dark:border-t-white/5 dark:shadow-zinc-950"
                   >
-                    <span className="text-foreground text-sm">Индивидуальные решения для малого бизнеса</span>
+                    <span className="text-foreground text-sm">Каждая сумка создана с душой и вниманием к деталям</span>
                     <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700"></span>
-
                     <div className="bg-background group-hover:bg-muted size-6 overflow-hidden rounded-full duration-500">
                       <div className="flex w-12 -translate-x-1/2 duration-500 ease-in-out group-hover:translate-x-0">
-                        <span className="flex size-6">
-                          <ArrowRight className="m-auto size-3" />
-                        </span>
-                        <span className="flex size-6">
-                          <ArrowRight className="m-auto size-3" />
-                        </span>
+                        <span className="flex size-6"><ArrowRight className="m-auto size-3" /></span>
+                        <span className="flex size-6"><ArrowRight className="m-auto size-3" /></span>
                       </div>
                     </div>
                   </a>
 
                   <h1 className="mt-8 max-w-4xl mx-auto text-balance text-6xl md:text-7xl lg:mt-16 xl:text-[5.25rem]">
-                    Трансформируйте бизнес с{" "}
-                    <span className="inline-block text-orange-500 text-6xl md:text-7xl xl:text-[5.25rem] font-semibold">
-                      современным ПО
+                    Коллекция сумок{" "}
+                    <span className="inline-block text-[#8B4513] text-6xl md:text-7xl xl:text-[5.25rem] font-semibold">
+                      ручной работы
                     </span>
                   </h1>
                   <p className="mx-auto mt-8 max-w-2xl text-balance text-lg text-muted-foreground">
-                    Создаем масштабируемые и эффективные программные решения под ваши бизнес-задачи.
-                    От веб-приложений до мобильных приложений - помогаем малому бизнесу расти с помощью технологий.
+                    Уникальные модели из натуральных материалов. Каждая сумка — это произведение искусства, созданное
+                    мастером с многолетним опытом. Натуральная кожа, лён, хлопок и ротанг.
                   </p>
                 </AnimatedGroup>
 
@@ -332,23 +450,21 @@ export default function SoftwareDevelopmentWebsite() {
                   variants={{
                     container: {
                       visible: {
-                        transition: {
-                          staggerChildren: 0.05,
-                          delayChildren: 0.75,
-                        },
+                        transition: { staggerChildren: 0.05, delayChildren: 0.75 },
                       },
                     },
                     ...transitionVariants,
                   }}
                   className="mt-12 flex flex-col items-center justify-center gap-2 md:flex-row"
                 >
-                  <div key={1} className="bg-orange-500/10 rounded-[14px] border border-orange-200 p-0.5">
-                    <Button size="lg" className="rounded-xl px-5 text-base bg-orange-500 hover:bg-orange-600">
-                      <span className="text-nowrap">Бесплатная консультация</span>
+                  <div key={1} className="bg-[#8B4513]/10 rounded-[14px] border border-[#8B4513]/20 p-0.5">
+                    <Button size="lg" className="rounded-xl px-5 text-base bg-[#8B4513] hover:bg-[#6B3410] text-white">
+                      <ShoppingBag className="mr-2 h-5 w-5" />
+                      <span className="text-nowrap">Смотреть коллекцию</span>
                     </Button>
                   </div>
-                  <Button key={2} size="lg" variant="ghost" className="h-10.5 rounded-xl px-5 hover:text-orange-500">
-                    <span className="text-nowrap">Наши работы</span>
+                  <Button key={2} size="lg" variant="ghost" className="h-10.5 rounded-xl px-5 hover:text-[#8B4513]">
+                    <span className="text-nowrap">О мастерской</span>
                   </Button>
                 </AnimatedGroup>
               </div>
@@ -358,10 +474,7 @@ export default function SoftwareDevelopmentWebsite() {
               variants={{
                 container: {
                   visible: {
-                    transition: {
-                      staggerChildren: 0.05,
-                      delayChildren: 0.75,
-                    },
+                    transition: { staggerChildren: 0.05, delayChildren: 0.75 },
                   },
                 },
                 ...transitionVariants,
@@ -372,93 +485,31 @@ export default function SoftwareDevelopmentWebsite() {
                   aria-hidden
                   className="bg-gradient-to-b to-background absolute inset-0 z-10 from-transparent from-35%"
                 />
-                <div className="inset-shadow-2xs ring-background dark:inset-shadow-white/20 bg-background relative mx-auto max-w-6xl overflow-hidden rounded-2xl border border-orange-200 p-4 shadow-lg shadow-orange-500/15 ring-1">
-                  <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950 dark:to-orange-900 aspect-[15/8] relative rounded-2xl border border-orange-200 overflow-hidden">
-                    <GridMotion items={gridItems} gradientColor="rgba(249, 115, 22, 0.1)" className="h-full w-full" />
+                <div className="inset-shadow-2xs ring-background dark:inset-shadow-white/20 bg-background relative mx-auto max-w-6xl overflow-hidden rounded-2xl border border-stone-300 p-4 shadow-lg shadow-[#8B4513]/10 ring-1">
+                  <div className="bg-gradient-to-br from-stone-50 to-amber-50 dark:from-stone-950 dark:to-amber-950 aspect-[15/8] relative rounded-2xl border border-stone-200 overflow-hidden">
+                    <GridMotion items={gridItems} gradientColor="rgba(139, 69, 19, 0.08)" className="h-full w-full" />
                   </div>
                 </div>
               </div>
 
-              <section className="bg-background pb-16 pt-16 md:pb-32">
+              {/* Trust badges */}
+              <section className="bg-background pb-16 pt-16 md:pb-20">
                 <div className="group relative m-auto max-w-5xl px-6">
                   <div className="absolute inset-0 z-10 flex scale-95 items-center justify-center opacity-0 duration-500 group-hover:scale-100 group-hover:opacity-100">
-                    <a href="#contact" className="block text-sm duration-150 hover:opacity-75 text-orange-500">
-                      <span>Готовы начать проект?</span>
+                    <a href="#products" className="block text-sm duration-150 hover:opacity-75 text-[#8B4513]">
+                      <span>Смотреть всю коллекцию</span>
                       <ChevronRight className="ml-1 inline-block size-3" />
                     </a>
                   </div>
-                  <div className="group-hover:blur-xs mx-auto mt-12 grid max-w-2xl grid-cols-4 gap-x-12 gap-y-8 transition-all duration-500 group-hover:opacity-50 sm:gap-x-16 sm:gap-y-14">
-                    <div className="flex">
-                      <img
-                        className="mx-auto h-5 w-fit dark:invert opacity-60"
-                        src="https://html.tailus.io/blocks/customers/nvidia.svg"
-                        alt="Логотип клиента"
-                        height="20"
-                        width="auto"
-                      />
-                    </div>
-                    <div className="flex">
-                      <img
-                        className="mx-auto h-4 w-fit dark:invert opacity-60"
-                        src="https://html.tailus.io/blocks/customers/column.svg"
-                        alt="Логотип клиента"
-                        height="16"
-                        width="auto"
-                      />
-                    </div>
-                    <div className="flex">
-                      <img
-                        className="mx-auto h-4 w-fit dark:invert opacity-60"
-                        src="https://html.tailus.io/blocks/customers/github.svg"
-                        alt="Логотип клиента"
-                        height="16"
-                        width="auto"
-                      />
-                    </div>
-                    <div className="flex">
-                      <img
-                        className="mx-auto h-5 w-fit dark:invert opacity-60"
-                        src="https://html.tailus.io/blocks/customers/nike.svg"
-                        alt="Логотип клиента"
-                        height="20"
-                        width="auto"
-                      />
-                    </div>
-                    <div className="flex">
-                      <img
-                        className="mx-auto h-5 w-fit dark:invert opacity-60"
-                        src="https://html.tailus.io/blocks/customers/lemonsqueezy.svg"
-                        alt="Логотип клиента"
-                        height="20"
-                        width="auto"
-                      />
-                    </div>
-                    <div className="flex">
-                      <img
-                        className="mx-auto h-4 w-fit dark:invert opacity-60"
-                        src="https://html.tailus.io/blocks/customers/laravel.svg"
-                        alt="Логотип клиента"
-                        height="16"
-                        width="auto"
-                      />
-                    </div>
-                    <div className="flex">
-                      <img
-                        className="mx-auto h-7 w-fit dark:invert opacity-60"
-                        src="https://html.tailus.io/blocks/customers/lilly.svg"
-                        alt="Логотип клиента"
-                        height="28"
-                        width="auto"
-                      />
-                    </div>
-                    <div className="flex">
-                      <img
-                        className="mx-auto h-6 w-fit dark:invert opacity-60"
-                        src="https://html.tailus.io/blocks/customers/openai.svg"
-                        alt="Логотип клиента"
-                        height="24"
-                        width="auto"
-                      />
+                  <div className="group-hover:opacity-20 transition-opacity duration-500">
+                    <p className="text-center text-sm text-muted-foreground mb-8">Нас выбирают ценители качества по всей России</p>
+                    <div className="mt-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 sm:gap-x-16">
+                      {["500+ довольных клиентов", "100% натуральные материалы", "Ручная работа", "Доставка по России", "Гарантия качества"].map((item, i) => (
+                        <div key={i} className="flex items-center gap-2 text-muted-foreground">
+                          <div className="h-2 w-2 rounded-full bg-[#8B4513]" />
+                          <span className="text-sm font-medium">{item}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -467,61 +518,121 @@ export default function SoftwareDevelopmentWebsite() {
           </div>
         </section>
 
-        <section className="bg-muted/50 py-16 md:py-32 dark:bg-transparent">
+        {/* Products Section */}
+        <section id="products" className="bg-[#f8f5f0] dark:bg-stone-950/30 py-16 md:py-24">
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-balance text-4xl font-semibold lg:text-5xl">
+                Последние новости за <span className="text-[#8B4513]">неделю</span>
+              </h2>
+              <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
+                Уникальные модели, созданные с душой и вниманием к деталям
+              </p>
+
+              {/* Filters */}
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+                <Filter className="h-4 w-4 text-muted-foreground mr-1" />
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    className={cn(
+                      "px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200",
+                      activeCategory === cat
+                        ? "bg-[#8B4513] text-white shadow-md"
+                        : "bg-white dark:bg-stone-800 text-muted-foreground border border-stone-200 dark:border-stone-700 hover:border-[#8B4513] hover:text-[#8B4513]",
+                    )}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Products Grid */}
+            <div className="products-container" style={{ maxWidth: "1280px", margin: "0 auto", padding: "40px 20px 60px" }}>
+              <motion.div
+                layout
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+              >
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </motion.div>
+            </div>
+
+            {/* Load More */}
+            <div className="text-center mt-4">
+              <Button
+                variant="outline"
+                size="lg"
+                className="rounded-xl px-8 border-[#8B4513]/30 hover:border-[#8B4513] hover:text-[#8B4513]"
+              >
+                Загрузить ещё
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* About / Features */}
+        <section id="about" className="bg-muted/30 py-16 md:py-32 dark:bg-transparent">
           <div className="mx-auto max-w-5xl px-6">
             <div className="text-center">
               <h2 className="text-balance text-4xl font-semibold lg:text-5xl">
-                Почему выбирают <span className="text-orange-500">КодМастер</span>
+                Почему выбирают <span className="text-[#8B4513]">нашу мастерскую</span>
               </h2>
               <p className="mt-4 text-muted-foreground">
-                Мы создаем качественные программные решения, которые помогают вашему бизнесу расти и преуспевать в цифровом мире.
+                Каждое изделие создаётся вручную с любовью и профессиональным подходом к каждой детали.
               </p>
             </div>
-            <Card className="mx-auto mt-8 grid max-w-sm divide-y overflow-hidden shadow-zinc-950/5 border-orange-200 *:text-center md:mt-16 md:max-w-full md:grid-cols-3 md:divide-x md:divide-y-0">
+            <Card className="mx-auto mt-8 grid max-w-sm divide-y overflow-hidden shadow-zinc-950/5 border-stone-200 *:text-center md:mt-16 md:max-w-full md:grid-cols-3 md:divide-x md:divide-y-0">
               <div className="group shadow-zinc-950/5">
                 <CardHeader className="pb-3">
-                  <CardDecorator>
-                    <Zap className="size-6 text-orange-500" aria-hidden />
-                  </CardDecorator>
-
-                  <h3 className="mt-6 font-medium">Быстрая разработка</h3>
+                  <div aria-hidden className="relative mx-auto size-36 [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]">
+                    <div className="absolute inset-0 [--border:black] dark:[--border:white] bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:24px_24px] opacity-10" />
+                    <div className="bg-background absolute inset-0 m-auto flex size-12 items-center justify-center border-t border-l border-stone-200">
+                      <span className="text-2xl">🧵</span>
+                    </div>
+                  </div>
+                  <h3 className="mt-6 font-medium">Ручная работа</h3>
                 </CardHeader>
-
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Быстрое прототипирование и гибкий процесс разработки для скорейшего вывода вашего продукта на рынок.
+                    Каждая сумка сшита вручную опытным мастером. Никакого массового производства — только индивидуальный подход.
                   </p>
                 </CardContent>
               </div>
 
               <div className="group shadow-zinc-950/5">
                 <CardHeader className="pb-3">
-                  <CardDecorator>
-                    <Settings2 className="size-6 text-orange-500" aria-hidden />
-                  </CardDecorator>
-
-                  <h3 className="mt-6 font-medium">Масштабируемые решения</h3>
+                  <div aria-hidden className="relative mx-auto size-36 [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]">
+                    <div className="absolute inset-0 [--border:black] dark:[--border:white] bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:24px_24px] opacity-10" />
+                    <div className="bg-background absolute inset-0 m-auto flex size-12 items-center justify-center border-t border-l border-stone-200">
+                      <span className="text-2xl">🌿</span>
+                    </div>
+                  </div>
+                  <h3 className="mt-6 font-medium">Натуральные материалы</h3>
                 </CardHeader>
-
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Созданы для роста вместе с вашим бизнесом - наши решения масштабируются по мере развития ваших потребностей.
+                    Используем только натуральную кожу, лён, хлопок и ротанг. Никакой синтетики — только экологичные материалы.
                   </p>
                 </CardContent>
               </div>
 
               <div className="group shadow-zinc-950/5">
                 <CardHeader className="pb-3">
-                  <CardDecorator>
-                    <Sparkles className="size-6 text-orange-500" aria-hidden />
-                  </CardDecorator>
-
-                  <h3 className="mt-6 font-medium">Современные технологии</h3>
+                  <div aria-hidden className="relative mx-auto size-36 [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]">
+                    <div className="absolute inset-0 [--border:black] dark:[--border:white] bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:24px_24px] opacity-10" />
+                    <div className="bg-background absolute inset-0 m-auto flex size-12 items-center justify-center border-t border-l border-stone-200">
+                      <span className="text-2xl">🎁</span>
+                    </div>
+                  </div>
+                  <h3 className="mt-6 font-medium">Индивидуальный заказ</h3>
                 </CardHeader>
-
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Используем новейшие технологии и лучшие практики, чтобы ваше ПО было готово к будущему.
+                    Создаём сумки на заказ по вашим пожеланиям: выбор цвета, размера, фурнитуры и отделки.
                   </p>
                 </CardContent>
               </div>
@@ -530,165 +641,51 @@ export default function SoftwareDevelopmentWebsite() {
         </section>
       </main>
 
-      <footer className="bg-background border-t border-orange-200">
+      <footer id="contact" className="bg-background border-t border-stone-200 dark:border-stone-800">
         <div className="mx-auto max-w-7xl py-16 px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-            {/* Company Info */}
             <div className="space-y-4 sm:col-span-2 lg:col-span-1">
               <Logo />
               <p className="text-sm text-muted-foreground max-w-xs">
-                Трансформируйте свой бизнес с помощью индивидуальных программных решений. Создаем масштабируемые приложения, которые растут вместе с вашим успехом.
+                Мастерская сумок ручной работы. Создаём уникальные изделия из натуральных материалов с 2018 года.
               </p>
-              <div className="flex space-x-4">
-                <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.96 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-                  </svg>
-                </a>
-                <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/>
-                  </svg>
-                </a>
-                <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M15.402 21v-6.966h2.333l.349-2.708h-2.682V9.598c0-.784.218-1.319 1.342-1.319h1.434V5.857a19.188 19.188 0 0 0-2.09-.107c-2.067 0-3.482 1.262-3.482 3.58v1.996h-2.338v2.708h2.338V21H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-4.598z"/>
-                  </svg>
-                </a>
-              </div>
             </div>
 
-            {/* Services */}
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-foreground">Услуги</h3>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                    Веб-разработка
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                    Мобильные приложения
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                    Заказное ПО
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                    Разработка API
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                    Облачные решения
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Company */}
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-foreground">Компания</h3>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                    О нас
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                    Наша команда
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                    Карьера
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                    Кейсы
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                    Блог
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Contact */}
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-foreground">Контакты</h3>
+              <h3 className="font-semibold text-sm uppercase tracking-wider text-foreground">Коллекция</h3>
               <ul className="space-y-3 text-sm text-muted-foreground">
-                <li className="flex items-center space-x-2">
-                  <svg className="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <span className="break-all">info@kodmaster.ru</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <svg className="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                    />
-                  </svg>
-                  <span>+7 (495) 123-45-67</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <svg className="h-4 w-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  <span>
-                    ул. Технопарковая, 15
-                    <br />
-                    Москва, 123456
-                  </span>
+                {["Кожаные сумки", "Вязаные модели", "Летняя коллекция", "Новинки"].map((item) => (
+                  <li key={item}><a href="#products" className="hover:text-[#8B4513] transition-colors">{item}</a></li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="font-semibold text-sm uppercase tracking-wider text-foreground">Информация</h3>
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                {["О мастерской", "Доставка и оплата", "Возврат", "Уход за изделиями"].map((item) => (
+                  <li key={item}><a href="#" className="hover:text-[#8B4513] transition-colors">{item}</a></li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="font-semibold text-sm uppercase tracking-wider text-foreground">Контакты</h3>
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                <li>Индивидуальные заказы</li>
+                <li>Доставка по всей России</li>
+                <li className="pt-2">
+                  <Button className="w-full bg-[#8B4513] hover:bg-[#6B3410] text-white rounded-xl">
+                    Написать мастеру
+                  </Button>
                 </li>
               </ul>
             </div>
           </div>
 
-          {/* Bottom section */}
-          <div className="mt-12 pt-8 border-t border-orange-200">
-            <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-              <div className="text-sm text-muted-foreground">2024 КодМастер. Все права защищены.</div>
-              <div className="flex flex-wrap justify-center sm:justify-end gap-x-6 gap-y-2 text-sm">
-                <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                  Политика конфиденциальности
-                </a>
-                <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                  Условия использования
-                </a>
-                <a href="#" className="text-muted-foreground hover:text-orange-500 transition-colors">
-                  Политика cookies
-                </a>
-              </div>
-            </div>
+          <div className="mt-12 border-t border-stone-200 dark:border-stone-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-muted-foreground">© 2026 Сумки ручной работы. Все права защищены.</p>
+            <p className="text-sm text-muted-foreground">Сделано с ❤️ для ценителей качества</p>
           </div>
         </div>
       </footer>
